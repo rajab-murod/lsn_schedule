@@ -42,6 +42,7 @@ class LessonSchedule(models.Model):
         ('1', '1-yillik'),
         ('2', '2-yillik'),
     )
+    edu_year = models.ForeignKey(EduYear, on_delete=models.CASCADE, related_name='schedule')
     semester = models.CharField(max_length=1, choices=SEMESTER, default='1')
     date_time = models.DateField()
     study_plan = models.ForeignKey(StudyPlan, on_delete=models.CASCADE, related_name='schedule')
@@ -49,4 +50,4 @@ class LessonSchedule(models.Model):
     group = models.TextField(blank=True, null=True)
 
     def __str__(self):
-        return self.date_time
+        return self.semester
