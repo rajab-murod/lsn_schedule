@@ -8,7 +8,7 @@ from decouple import config
 from main.serializers import LessonScheduleSerializer \
     , StudyPlanSerializer, EduYearSerializer
 from main.models import LessonSchedule, StudyPlan, EduYear
-
+from main.filters import StudyPlanFilter
 
 class LessonScheduleViewSet(viewsets.ModelViewSet):
     queryset = LessonSchedule.objects.all()
@@ -21,27 +21,11 @@ class HemisTokenAPIView(APIView):
         return Response({'token': config('HEMIS_TOKEN')}, status=status.HTTP_200_OK)
 
 
-class StudyPlanAPIView(APIView):
-    def get(self, request, *args, **kwargs):
-        g_name = request.query_params.get('name')
-        qs = StudyPlan.objects.filter(groups__icontains=g_name).values()
-        return Response({'data': qs}, status=status.HTTP_200_OK)
-
-
 class StudyPlanViewSet(viewsets.ModelViewSet):
     queryset = StudyPlan.objects.all()
     serializer_class = StudyPlanSerializer
-    filter_backends = [DjangoFilterBackend, filters.SearchFilter]
-    filterset_fields = ['edu_year_id', 'semester', 'edu_type', 'teacher_id', 'confirm']
-    search_fields = ['^groups__name']
-
-    # def list(self, request, *args, **kwargs):
-    #     g_name = request.query_params.get('gname')
-    #     if g_name is not None:
-    #         qs = StudyPlan.objects.filter(groups__icontains=g_name).values()
-    #         return Response({'data': qs}, status=status.HTTP_200_OK)
-    #     qs = StudyPlan.objects.all().values()
-    #     return Response({'data': qs}, status=status.HTTP_200_OK)
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = StudyPlanFilter
 
 
 class EduYearViewSet(viewsets.ModelViewSet):
