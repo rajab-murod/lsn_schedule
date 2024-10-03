@@ -1,4 +1,21 @@
+from django.contrib.auth.models import User
 from django.db import models
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+
+
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile', null=True, blank=True)
+    hemis_id = models.IntegerField(default=0)
+    first_name = models.CharField(max_length=50)
+    last_name = models.CharField(max_length=50)
+    surname = models.CharField(max_length=50)
+    specialty = models.CharField(max_length=255)
+    department_id = models.IntegerField(default=0)
+    department_name = models.CharField(max_length=255)
+
+    def __str__(self):
+        return f'{self.first_name} {self.last_name}'
 
 
 class EduYear(models.Model):
@@ -24,8 +41,7 @@ class StudyPlan(models.Model):
     edu_type = models.CharField(max_length=1, choices=EDU_TYPE, default='M')
     subject_name = models.TextField(blank=True, null=True)
     hour = models.IntegerField(default=0)
-    teacher_name = models.CharField(max_length=50)
-    teacher_id = models.IntegerField(default=0)
+    teacher = models.ForeignKey(User, on_delete=models.CASCADE, related_name='plan')
     groups = models.TextField(blank=True, null=True)
     group_division = models.BooleanField(default=False)
     thread = models.BooleanField(default=False)
@@ -48,6 +64,8 @@ class LessonSchedule(models.Model):
     study_plan = models.ForeignKey(StudyPlan, on_delete=models.CASCADE, related_name='schedule')
     para = models.IntegerField(default=1)
     group = models.TextField(blank=True, null=True)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='schedule')
 
     def __str__(self):
         return self.semester
+
