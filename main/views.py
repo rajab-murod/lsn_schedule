@@ -49,12 +49,7 @@ class LoginView(APIView):
         return Response({
             'id': user.id,
             'auth_token': token.key,
-            'hemis_id': user.profile.hemis_id,
-            'hemis_token': config('HEMIS_TOKEN'),
-            'fio': f'{user.profile.last_name} {user.profile.first_name} {user.profile.surname}',
-            'specialty': f'{user.profile.specialty}',
-            'department_id': f'{user.profile.department_id}',
-            'department_name': f'{user.profile.department_name}'
+            'username': user.username,
 
         }, status=status.HTTP_200_OK)
 
