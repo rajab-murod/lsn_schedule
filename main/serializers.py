@@ -17,6 +17,13 @@ class StudyPlanSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+    def create(self, validated_data):
+        edu_year_data = validated_data.pop('edu_year')
+        edu_year, _ = EduYear.objects.get_or_create(**edu_year_data)
+        plan = StudyPlan.objects.create(**validated_data, edu_year=edu_year)
+        return plan
+
+
 class LessonScheduleSerializer(serializers.ModelSerializer):
     study_plan = StudyPlanSerializer(many=False)
 
