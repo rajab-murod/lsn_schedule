@@ -9,14 +9,18 @@ from decouple import config
 
 from main.hemis_api import HemisAPI
 from main.serializers import LessonScheduleSerializer \
-    , StudyPlanSerializer, EduYearSerializer, LoginSerializer
+    , StudyPlanSerializer, EduYearSerializer, LoginSerializer, ReadyOnlyLessonScheduleSerializer
 from main.models import LessonSchedule, StudyPlan, EduYear
 from main.filters import StudyPlanFilter
 
 
 class LessonScheduleViewSet(viewsets.ModelViewSet):
     queryset = LessonSchedule.objects.all()
-    serializer_class = LessonScheduleSerializer
+
+    def get_serializer_class(self):
+        if self.action == 'list' or self.action == 'retrieve':
+            return ReadyOnlyLessonScheduleSerializer
+        return LessonScheduleSerializer
 
 
 class StudyPlanViewSet(viewsets.ModelViewSet):

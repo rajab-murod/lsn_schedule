@@ -18,6 +18,23 @@ def test_create_plan(api_client, user, year):
     assert response.status_code == 201
 
 
+def test_fail_create_plan(api_client):
+    payload = {
+          "semester": "1",
+          "edu_type": "M",
+          "subject_name": "Subject1",
+          "hour": 12,
+          "groups": "string",
+          "group_division": True,
+          "thread": True,
+          "confirm": True
+    }
+    response = api_client.post('/api/plans/', data=payload, format='json')
+    assert response.status_code == 400
+    assert response.data['edu_year'] == ['This field is required.']
+    assert response.data['teacher'] == ['This field is required.']
+
+
 def test_update_plan(api_client, plan):
 
    edit_payload = {

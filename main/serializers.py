@@ -24,9 +24,15 @@ class StudyPlanSerializer(serializers.ModelSerializer):
         return plan
 
 
-class LessonScheduleSerializer(serializers.ModelSerializer):
+class ReadyOnlyLessonScheduleSerializer(serializers.ModelSerializer):
     study_plan = StudyPlanSerializer(many=False)
 
+    class Meta:
+        model = LessonSchedule
+        fields = '__all__'
+
+
+class LessonScheduleSerializer(serializers.ModelSerializer):
     class Meta:
         model = LessonSchedule
         fields = '__all__'
